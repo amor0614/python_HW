@@ -107,10 +107,11 @@ while str(collection.find({'is_get_detail':False})).find('None') == -1: #判斷�
         except:
             print('無法擷取詳細資料')
             #解決物件已經被移除問題
-            title = Obj.find('dl', {'class': 'error_img'}).get_text()
-            if title.find('找不到') != -1:
-                collection.delete_one(task)
-                print('原因:'+task_url+'資料已被移除，執行:刪除資料庫資料')
+            if len(Obj.find_all('dl', {'class': 'error_img'})) != 0 :
+                title = Obj.find('dl', {'class': 'error_img'}).get_text()
+                if title.find('找不到') != -1:
+                    collection.delete_one(task)
+                    print('原因:'+task_url+'資料已被移除，執行:刪除資料庫資料')
             continue
 
         #擷取資料內容
@@ -170,8 +171,8 @@ while str(collection.find({'is_get_detail':False})).find('None') == -1: #判斷�
        
         insert_obj = {
                             '_id':task['_id'],
-                            'region':task['region'],
                             'url':task_url,
+                            'region':region,
                             'lessor_name':name,
                             'lessor_Identity':identity,
                             'contact_phone':contact_phone,
