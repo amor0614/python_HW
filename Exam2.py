@@ -105,9 +105,14 @@ while str(collection.find({'is_get_detail':False})).find('None') == -1: #判斷�
             detailInfo = Obj.find('div', {'class': 'detailInfo clearfix'}).find_all('li')
             detailInfo2 = Obj.find('ul', {'class': 'clearfix labelList labelList-1'}).find_all('li')
         except:
-            print('無法擷取詳細資料')
+            print(task_url + ' 無法擷取詳細資料')
             #解決物件已經被移除問題
-            if len(Obj.find_all('dl', {'class': 'error_img'})) != 0 :
+            if len(Obj.find_all('div', {'class': 'error-info'})) != 0 :
+                title = Obj.find('div', {'class': 'error-info'}).find('div', {'class': 'title'}).get_text()
+                if title.find('不存在') != -1:
+                    collection.delete_one(task)
+                    print('原因:'+task_url+'資料已被移除，執行:刪除資料庫資料')
+            elif len(Obj.find_all('dl', {'class': 'error_img'})) != 0 :
                 title = Obj.find('dl', {'class': 'error_img'}).get_text()
                 if title.find('找不到') != -1:
                     collection.delete_one(task)
